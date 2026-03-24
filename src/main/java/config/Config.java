@@ -34,6 +34,7 @@ public class Config {
     }
 
     @Getter
+    @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Browser {
         private String type;

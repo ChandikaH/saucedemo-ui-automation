@@ -1,6 +1,7 @@
 package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import exceptions.FrameworkException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -51,7 +52,7 @@ public final class ConfigLoader {
             log.info("Configuration loaded — environment='{}', browser='{}', headless={}", config.getEnvironment().getName(), config.getBrowser().getType(), config.getBrowser().isHeadless());
             return config;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse configuration file: " + configFile, e);
+            throw new FrameworkException("Failed to parse configuration file: " + configFile, e);
         }
     }
 }

@@ -1,17 +1,54 @@
+# Maven
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
 dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-# https://maven.apache.org/wrapper/#usage-without-binary-jar
-.mvn/wrapper/maven-wrapper.jar
 
-# Eclipse m2e generated files
-# Eclipse Core
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Test outputs
+test-output/
+surefire-reports/
+failsafe-reports/
+reports/
+logs/
+
+# Allure
+allure-results/
+allure-report/
+allure-history/
+
+# Drivers
+drivers/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDEs
+.idea/
+*.iml
+.vscode/
 .project
-# JDT-specific (Eclipse Java Development Tools)
 .classpath
+.settings/
+bin/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / secrets
+.env
+*.properties.local
+*.secret
+*.key
+config-local.json
+
+# Temp / logs
+*.log
+*.tmp
+*.cache
