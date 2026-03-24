@@ -1,0 +1,32 @@
+{
+  "environment": {
+    "name": "qa",
+    "baseUrl": "https://www.saucedemo.com/"
+  },
+  "browser": {
+    "type": "chrome",
+    "headless": false
+  },
+  "timeouts": {
+    "explicit": 15,
+    "pageLoad": 20
+  },
+  "screenshot": {
+    "enabled": true,
+    "onFailure": true,
+    "format": "png",
+    "path": "target/screenshots"
+  },
+  "allure": {
+    "enabled": true,
+    "resultsPath": "target/allure-results"
+  },
+  "retry": {
+    "enabled": true,
+    "maxAttempts": 2
+  },
+  "execution": {
+    "parallel": false,
+    "threadCount": 3
+  }
+}
