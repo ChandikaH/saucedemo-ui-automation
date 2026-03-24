@@ -1,7 +1,7 @@
-package config;
+package com.saucedemo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exceptions.FrameworkException;
+import com.saucedemo.exceptions.FrameworkException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;

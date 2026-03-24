@@ -1,4 +1,4 @@
-package exceptions;
+package com.saucedemo.exceptions;
 
 /**
  * Generic unchecked exception for framework-level failures.

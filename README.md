@@ -4,4 +4,13 @@ UI automation framework for testing the SauceDemo e-commerce web app using Selen
 
 ## Key Technologies and Tools
 
-For issues or questions, please open an issue on GitHub.
+- **Java 21**
+- **Selenium Manager**
+- **TestNG**
+- **Allure Reporting**
+- **Maven**
+- **Lombok**
+- **Retry Analyzer**
+- **Screenshot**
+- **Parallel execution**
+- **GitHub Actions CI**

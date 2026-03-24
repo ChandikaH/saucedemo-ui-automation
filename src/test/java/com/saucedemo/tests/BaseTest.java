@@ -1,6 +1,8 @@
-package core;
+package com.saucedemo.tests;
 
-import config.ConfigLoader;
+import com.saucedemo.config.ConfigLoader;
+import com.saucedemo.core.DriverFactory;
+import com.saucedemo.core.TestContext;
 import io.qameta.allure.Allure;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +52,11 @@ public abstract class BaseTest {
             throw softFailure;
         } finally {
             log.info("Tearing down after test: {} — status: {}", result.getName(), getStatusLabel(result.getStatus()));
-            DriverFactory.tearDownDriver();
+            try {
+                DriverFactory.tearDownDriver();
+            } catch (Exception e) {
+                log.warn("Exception during driver teardown for test '{}': {}", result.getName(), e.getMessage(), e);
+            }
         }
     }
 
@@ -67,3 +73,4 @@ public abstract class BaseTest {
         };
     }
 }
+

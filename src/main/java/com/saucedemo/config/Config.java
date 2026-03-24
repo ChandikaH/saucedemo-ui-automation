@@ -1,4 +1,4 @@
-package config;
+package com.saucedemo.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;

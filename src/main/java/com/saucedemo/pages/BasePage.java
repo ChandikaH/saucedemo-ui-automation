@@ -1,48 +1,37 @@
-package core;
+package com.saucedemo.pages;
 
-import lombok.Getter;
+import com.saucedemo.core.DriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import utils.ElementActions;
-import utils.WaitUtils;
+import com.saucedemo.utils.ElementActions;
 
 @Slf4j
-@Getter
 public abstract class BasePage {
 
     protected final WebDriver driver;
-    protected final WaitUtils wait;
-    protected final ElementActions actions;
 
-    protected BasePage(TestContext context) {
-        this.driver = context.driver();
-        this.wait = new WaitUtils(driver);
-        this.actions = new ElementActions(driver);
-        log.debug("{} page object initialised for thread '{}'",
-                this.getClass().getSimpleName(),
-                Thread.currentThread().getName());
+    protected BasePage() {
+        this.driver = DriverManager.get();
+        log.debug("{} page object initialised for thread '{}'", this.getClass().getSimpleName(), Thread.currentThread().getName());
     }
 
     protected void click(By locator) {
         log.info("Clicking element: {}", locator);
-        wait.waitForClickable(locator);
-        actions.click(locator);
+        ElementActions.click(locator);
     }
 
     protected void type(By locator, String text) {
         log.info("Typing '{}' into element: {}", text, locator);
-        wait.waitForVisible(locator);
-        actions.type(locator, text);
+        ElementActions.type(locator, text);
     }
 
     protected String getText(By locator) {
-        wait.waitForVisible(locator);
-        return actions.getText(locator);
+        return ElementActions.getText(locator);
     }
 
     protected boolean isVisible(By locator) {
-        return wait.isVisible(locator);
+        return ElementActions.isDisplayed(locator);
     }
 
     protected void navigateTo(String url) {
