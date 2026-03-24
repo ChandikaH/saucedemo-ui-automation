@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 public final class DriverFactory {
 
     private DriverFactory() {
-        // Add this to prevent instantiation (Sonar rule)
+        // Utility class constructor to prevent instantiation
         throw new UnsupportedOperationException("Utility class");
     }
 
