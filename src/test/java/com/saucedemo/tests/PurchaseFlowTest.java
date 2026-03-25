@@ -2,6 +2,8 @@ package com.saucedemo.tests;
 
 import com.saucedemo.core.BaseTest;
 import com.saucedemo.core.RetryAnalyzer;
+import com.saucedemo.data.SyntheticCheckoutData;
+import com.saucedemo.data.models.CheckoutUser;
 import com.saucedemo.pages.*;
 import com.saucedemo.utils.Credentials;
 import io.qameta.allure.Description;
@@ -41,7 +43,8 @@ public class PurchaseFlowTest extends BaseTest {
         CheckoutInfoPage infoPage = cartPage.proceedToCheckout();
 
         log.info("Filling checkout information");
-        CheckoutOverviewPage overviewPage = infoPage.fillCheckoutInformation("John", "Doe", "12345").clickContinue();
+        CheckoutUser user = SyntheticCheckoutData.randomUser();
+        CheckoutOverviewPage overviewPage = infoPage.fillCheckoutInformation(user.getFirstName(), user.getLastName(), user.getPostalCode()).clickContinue();
         log.info("Validating subtotal, tax, and total amounts");
         overviewPage.validateTotals();
         log.info("Completing checkout");

@@ -12,7 +12,7 @@ import org.testng.asserts.SoftAssert;
 import java.lang.reflect.Method;
 
 @Slf4j
-@Listeners({TestListener.class, io.qameta.allure.testng.AllureTestNg.class})
+@Listeners({io.qameta.allure.testng.AllureTestNg.class, TestListener.class})
 public abstract class BaseTest {
 
     @Getter
