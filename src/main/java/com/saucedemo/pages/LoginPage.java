@@ -9,9 +9,9 @@ import org.openqa.selenium.By;
 public class LoginPage extends BasePage {
     private static final By USERNAME_INPUT = By.cssSelector("[data-test='username']");
     private static final By PASSWORD_INPUT = By.cssSelector("[data-test='password']");
-    private static final By LOGIN_BUTTON   = By.cssSelector("[data-test='login-button']");
+    private static final By LOGIN_BUTTON = By.cssSelector("[data-test='login-button']");
 
-    @Step("Login with username: {username} and password: {password}")
+    @Step("Login with username: {username}")
     public ProductsPage login(String username, String password) {
         log.info("Attempting login as '{}'", username);
         type(USERNAME_INPUT, username);
