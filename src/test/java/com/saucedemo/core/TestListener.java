@@ -33,6 +33,7 @@ public class TestListener implements ITestListener, ISuiteListener {
     public void onTestSuccess(ITestResult result) {
         log.info("---- TEST PASSED   — {} ({}ms)", result.getName(), elapsedMs(result));
         Allure.label("status", "passed");
+        ScreenshotUtils.captureScreenshot("passed_" + result.getName());
     }
 
     @Override
