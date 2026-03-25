@@ -6,11 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.asserts.SoftAssert;
 
 import java.lang.reflect.Method;
 
 @Slf4j
+@Listeners({TestListener.class, io.qameta.allure.testng.AllureTestNg.class})
 public abstract class BaseTest {
 
     @Getter

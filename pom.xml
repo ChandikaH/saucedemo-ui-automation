@@ -10,7 +10,8 @@
     <version>1.0.0</version>
     <name>Saucedemo UI Automation Framework</name>
     <description>
-        UI automation framework for testing the SauceDemo e-commerce web app using Selenium, TestNG, and Allure, following Page Object Model best practices.
+        UI automation framework for testing the SauceDemo e-commerce web app using Selenium, TestNG, and Allure,
+        following Page Object Model best practices.
     </description>
 
     <properties>
@@ -113,8 +114,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <!--suppress UnresolvedMavenProperty -->
-                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                        <suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
