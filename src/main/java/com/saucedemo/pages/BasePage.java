@@ -46,6 +46,4 @@ public abstract class BasePage {
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
-
-    public abstract boolean isLoaded();
 }

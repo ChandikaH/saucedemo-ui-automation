@@ -1,0 +1,118 @@
+name: SauceDemo UI Automation — CI
+
+on:
+  push:
+    branches: [ "main", "develop", "feature/**" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser to run tests on (chrome|firefox|edge)"
+        required: false
+        default: "chrome"
+
+env:
+  JAVA_VERSION: "21"
+  JAVA_DISTRIBUTION: "temurin"
+
+jobs:
+  test:
+    name: Run UI Tests
+    runs-on: ubuntu-latest
+
+    env:
+      BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Install Chrome
+        if: env.BROWSER == 'chrome'
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Firefox
+        if: env.BROWSER == 'firefox'
+        uses: browser-actions/setup-firefox@v1
+
+      - name: Install Edge
+        if: env.BROWSER == 'edge'
+        uses: browser-actions/setup-edge@v1
+
+      - name: Create output directories
+        run: |
+          mkdir -p target/screenshots
+          mkdir -p target/allure-results
+          mkdir -p target/logs
+
+      - name: Build and run tests
+        run: mvn clean test --no-transfer-progress -B
+        continue-on-error: true
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results/
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload failure screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: target/screenshots/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: target/logs/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload Surefire XML reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Generate Allure HTML report
+        if: always()
+        run: |
+          mvn allure:report --no-transfer-progress -B || true
+
+      - name: Upload Allure HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: target/site/allure-maven-plugin/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Check test results
+        run: |
+          RESULT=$(find target/surefire-reports -name "*.xml" 2>/dev/null \
+            | xargs grep -l 'failures="[1-9]\|errors="[1-9]' 2>/dev/null | wc -l)
+          if [ "$RESULT" -gt "0" ]; then
+            echo "::error::One or more tests failed. Check the Allure report artifact."
+            exit 1
+          fi
+          echo "All tests passed."

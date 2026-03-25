@@ -28,11 +28,7 @@ public final class WebDriverFactory {
     }
 
     public static WebDriver create() {
-        String browserType = CONFIG.getBrowser().getType();
-        if (browserType == null || browserType.isBlank()) {
-            throw new IllegalArgumentException("Browser type from configuration cannot be null or empty");
-        }
-        browserType = browserType.toLowerCase().trim();
+        String browserType = resolveBrowserType();
         boolean headless = CONFIG.getBrowser().isHeadless();
 
         log.info("Creating '{}' WebDriver (headless={})", browserType, headless);
@@ -41,7 +37,8 @@ public final class WebDriverFactory {
             case "chrome" -> createChrome(headless);
             case "firefox" -> createFirefox(headless);
             case "edge" -> createEdge(headless);
-            default -> throw new IllegalArgumentException("Unsupported browser type: '" + browserType + "'. Supported: chrome, firefox, edge");
+            default ->
+                    throw new IllegalArgumentException("Unsupported browser type: '" + browserType + "'. Supported: chrome, firefox, edge");
         };
 
         applyTimeoutsAndWindow(driver);
@@ -54,15 +51,7 @@ public final class WebDriverFactory {
         if (headless) {
             options.addArguments("--headless=new");
         }
-        options.addArguments(
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-gpu",
-                "--window-size=1920,1080",
-                "--disable-extensions",
-                "--disable-infobars",
-                "--remote-allow-origins=*"
-        );
+        options.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080", "--disable-extensions", "--disable-infobars", "--remote-allow-origins=*");
         options.setAcceptInsecureCerts(true);
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         log.debug("ChromeOptions configured");
@@ -85,12 +74,7 @@ public final class WebDriverFactory {
         if (headless) {
             options.addArguments("--headless=new");
         }
-        options.addArguments(
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-gpu",
-                "--window-size=1920,1080"
-        );
+        options.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080");
         options.setAcceptInsecureCerts(true);
         log.debug("EdgeOptions configured");
         return new EdgeDriver(options);
@@ -101,5 +85,25 @@ public final class WebDriverFactory {
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoad));
         driver.manage().window().maximize();
         log.debug("Applied page-load timeout: {}s and maximized window", pageLoad);
+    }
+
+    private static String resolveBrowserType() {
+        String fromEnv = System.getenv("BROWSER");
+        String fromProp = System.getProperty("browser");
+        String fromConfig = CONFIG.getBrowser().getType();
+
+        String browserType;
+        if (fromEnv != null && !fromEnv.isBlank()) {
+            browserType = fromEnv;
+        } else if (fromProp != null && !fromProp.isBlank()) {
+            browserType = fromProp;
+        } else {
+            browserType = fromConfig;
+        }
+
+        if (browserType == null || browserType.isBlank()) {
+            throw new IllegalArgumentException("Browser type cannot be null or empty");
+        }
+        return browserType.toLowerCase().trim();
     }
 }
