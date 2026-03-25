@@ -15,6 +15,8 @@ on:
 env:
   JAVA_VERSION: "21"
   JAVA_DISTRIBUTION: "temurin"
+  STD_USER_USERNAME: ${{ secrets.STD_USER_USERNAME }}
+  STD_USER_PASSWORD: ${{ secrets.STD_USER_PASSWORD }}
 
 jobs:
   test:
@@ -25,14 +27,14 @@ jobs:
       BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
           cache: maven
 
       - name: Install Chrome
@@ -47,24 +49,30 @@ jobs:
         if: env.BROWSER == 'edge'
         uses: browser-actions/setup-edge@v1
 
+      - name: Verify browser
+        run: |
+          if [ "${BROWSER}" = "chrome" ]; then google-chrome --version; fi
+          if [ "${BROWSER}" = "firefox" ]; then firefox --version; fi
+          if [ "${BROWSER}" = "edge" ]; then microsoft-edge --version; fi
+
       - name: Create output directories
         run: |
           mkdir -p target/screenshots
           mkdir -p target/allure-results
           mkdir -p target/logs
+          mkdir -p target/surefire-reports
 
-      - name: Build and run tests
-        run: mvn clean test --no-transfer-progress -B
-        continue-on-error: true
+      - name: Build & run tests
+        run: mvn -B -Denv=qa --no-transfer-progress clean test
 
-      - name: Upload Allure results
+      - name: Upload Allure raw results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
           path: target/allure-results/
+          if-no-files-found: ignore
           retention-days: 14
-          if-no-files-found: warn
 
       - name: Upload failure screenshots
         if: always()
@@ -72,8 +80,8 @@ jobs:
         with:
           name: screenshots
           path: target/screenshots/
-          retention-days: 7
           if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload test logs
         if: always()
@@ -81,8 +89,8 @@ jobs:
         with:
           name: test-logs
           path: target/logs/
-          retention-days: 7
           if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload Surefire XML reports
         if: always()
@@ -90,29 +98,31 @@ jobs:
         with:
           name: surefire-reports
           path: target/surefire-reports/
-          retention-days: 7
           if-no-files-found: ignore
+          retention-days: 7
 
       - name: Generate Allure HTML report
         if: always()
         run: |
-          mvn allure:report --no-transfer-progress -B || true
+          echo "Generating Allure report..."
+          mvn allure:report --no-transfer-progress || true
 
-      - name: Upload Allure HTML report
+      - name: Upload Allure HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-html-report
           path: target/site/allure-maven-plugin/
-          retention-days: 14
           if-no-files-found: ignore
+          retention-days: 14
 
-      - name: Check test results
+      - name: Fail CI if tests failed
+        if: always()
         run: |
           RESULT=$(find target/surefire-reports -name "*.xml" 2>/dev/null \
-            | xargs grep -l 'failures="[1-9]\|errors="[1-9]' 2>/dev/null | wc -l)
+            | xargs grep -l 'failures="[1-9]\|errors="[1-9]' || true | wc -l)
           if [ "$RESULT" -gt "0" ]; then
-            echo "::error::One or more tests failed. Check the Allure report artifact."
+            echo "::error::Test failures found. Check Allure report."
             exit 1
           fi
-          echo "All tests passed."
+          echo "All tests passed successfully."

@@ -1,17 +1,18 @@
 package com.saucedemo.core;
 
 import com.saucedemo.config.ConfigLoader;
-import io.qameta.allure.Allure;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.asserts.SoftAssert;
 
 import java.lang.reflect.Method;
 
 @Slf4j
+@Listeners({io.qameta.allure.testng.AllureTestNg.class, TestListener.class})
 public abstract class BaseTest {
 
     @Getter
@@ -23,10 +24,10 @@ public abstract class BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp(Method method) {
         String testName = method.getName();
-        log.info("══════════════════════════════════════════");
+        log.info("==========================================");
         log.info("Starting test: {}", testName);
         log.info("Thread: {}", Thread.currentThread().getName());
-        log.info("══════════════════════════════════════════");
+        log.info("==========================================");
 
         DriverFactory.initDriver();
         context = TestContext.fromCurrentThread();
@@ -34,9 +35,6 @@ public abstract class BaseTest {
 
         var cfg = ConfigLoader.get();
         context.driver().get(cfg.getEnvironment().getBaseUrl());
-
-        Allure.label("environment", cfg.getEnvironment().getName());
-        Allure.label("browser", cfg.getBrowser().getType());
     }
 
     @AfterMethod(alwaysRun = true)

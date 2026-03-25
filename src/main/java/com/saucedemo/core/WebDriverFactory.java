@@ -12,6 +12,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 import java.time.Duration;
+import java.util.Map;
 
 /**
  * WebDriver Factory for creating browser instances.
@@ -51,10 +52,10 @@ public final class WebDriverFactory {
         if (headless) {
             options.addArguments("--headless=new");
         }
-        options.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080", "--disable-extensions", "--disable-infobars", "--remote-allow-origins=*");
+        options.addArguments("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080", "--incognito", "--disable-extensions", "--disable-notifications", "--disable-infobars", "--disable-popup-blocking", "--disable-sync");
+        options.addArguments("--disable-features=PasswordManagerUI,PasswordManagerEnabled,PasswordReuseDetection,PasswordLeakDetection,SafetyCheck");
+        options.setExperimentalOption("prefs", Map.of("credentials_enable_service", false, "profile.password_manager_enabled", false, "profile.password_manager_leak_detection", false, "profile.autofill_profile_enabled", false, "autofill.credit_card_enabled", false));
         options.setAcceptInsecureCerts(true);
-        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        log.debug("ChromeOptions configured");
         return new ChromeDriver(options);
     }
 

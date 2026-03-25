@@ -24,6 +24,7 @@ public class Config {
     private Allure allure;
     private Retry retry;
     private Execution execution;
+    private TestData testdata;
 
     @Getter
     @Setter
@@ -76,5 +77,12 @@ public class Config {
     public static class Execution {
         private boolean parallel;
         private int threadCount;
+    }
+
+    @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class TestData {
+        private String username;
+        private String password;
     }
 }

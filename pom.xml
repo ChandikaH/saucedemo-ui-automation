@@ -10,7 +10,8 @@
     <version>1.0.0</version>
     <name>Saucedemo UI Automation Framework</name>
     <description>
-        UI automation framework for testing the SauceDemo e-commerce web app using Selenium, TestNG, and Allure, following Page Object Model best practices.
+        UI automation framework for testing the SauceDemo e-commerce web app using Selenium, TestNG, and Allure,
+        following Page Object Model best practices.
     </description>
 
     <properties>
@@ -26,6 +27,7 @@
         <jackson.version>2.21.2</jackson.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.32</logback.version>
+        <datafaker.version>2.5.4</datafaker.version>
 
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
@@ -81,6 +83,11 @@
             <version>${aspectj.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>${datafaker.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -107,7 +114,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                        <suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"

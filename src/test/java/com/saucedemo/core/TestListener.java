@@ -24,15 +24,13 @@ public class TestListener implements ITestListener, ISuiteListener {
     @Override
     public void onTestStart(ITestResult result) {
         log.info("---- TEST STARTED  — {}.{}", result.getTestClass().getName(), result.getName());
-        Allure.label("testName", result.getName());
-        Allure.feature(result.getTestClass().getRealClass().getSimpleName());
-        Allure.story(result.getName());
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
         log.info("---- TEST PASSED   — {} ({}ms)", result.getName(), elapsedMs(result));
         Allure.label("status", "passed");
+        ScreenshotUtils.captureScreenshot("passed_" + result.getName());
     }
 
     @Override
