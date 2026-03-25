@@ -1,7 +1,6 @@
 package com.saucedemo.core;
 
 import com.saucedemo.config.ConfigLoader;
-import io.qameta.allure.Allure;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.ITestResult;
@@ -23,10 +22,10 @@ public abstract class BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp(Method method) {
         String testName = method.getName();
-        log.info("══════════════════════════════════════════");
+        log.info("==========================================");
         log.info("Starting test: {}", testName);
         log.info("Thread: {}", Thread.currentThread().getName());
-        log.info("══════════════════════════════════════════");
+        log.info("==========================================");
 
         DriverFactory.initDriver();
         context = TestContext.fromCurrentThread();
@@ -34,9 +33,6 @@ public abstract class BaseTest {
 
         var cfg = ConfigLoader.get();
         context.driver().get(cfg.getEnvironment().getBaseUrl());
-
-        Allure.label("environment", cfg.getEnvironment().getName());
-        Allure.label("browser", cfg.getBrowser().getType());
     }
 
     @AfterMethod(alwaysRun = true)

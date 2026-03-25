@@ -5,10 +5,9 @@
         <listener class-name="com.saucedemo.core.RetryTransformer"/>
     </listeners>
 
-
     <test name="SauceDemo UI Tests">
         <classes>
-            <class name="com.saucedemo.tests.SampleTest"/>
+            <class name="com.saucedemo.tests.PurchaseFlowTest"/>
         </classes>
     </test>
 

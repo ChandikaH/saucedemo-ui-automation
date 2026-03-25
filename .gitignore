@@ -19,6 +19,7 @@ logs/
 allure-results/
 allure-report/
 allure-history/
+.allure
 
 # Drivers
 drivers/

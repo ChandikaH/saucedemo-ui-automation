@@ -5,7 +5,7 @@
   },
   "browser": {
     "type": "chrome",
-    "headless": false
+    "headless": true
   },
   "timeouts": {
     "explicit": 15,
@@ -23,10 +23,14 @@
   },
   "retry": {
     "enabled": true,
-    "maxAttempts": 2
+    "maxAttempts": 1
   },
   "execution": {
     "parallel": false,
     "threadCount": 3
+  },
+  "testdata": {
+    "username": "",
+    "password": ""
   }
 }

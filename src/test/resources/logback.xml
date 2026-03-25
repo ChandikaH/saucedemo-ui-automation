@@ -12,7 +12,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>target/logs/automation.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
-                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>7</maxHistory>
@@ -27,5 +27,5 @@
         <appender-ref ref="FILE"/>
     </root>
     <logger name="org.seleniumhq" level="WARN"/>
-    <logger name="io.netty"       level="WARN"/>
+    <logger name="io.netty" level="WARN"/>
 </configuration>
